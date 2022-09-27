@@ -10,7 +10,6 @@ body {
 
 .container {
     padding: 30px;
-    height: 100vh;
     display: flex;
     width: 100%;
     max-width: 600px;
@@ -51,4 +50,22 @@ body {
 .container .form-container {
     display: flex;
     flex-direction: column;
+}
+
+.container .list-container {
+    margin-top: 20px;
+}
+
+.container .list-container ul {
+    list-style: none;
+}
+
+.container .list-container ul li {
+    border-bottom: 1px solid rgba(218, 218, 218, 0.385);
+    margin-bottom: 5px;
+    padding: 16px 0;
+}
+
+.container .list-container ul li span {
+    color: #f1f1f1;
 }
