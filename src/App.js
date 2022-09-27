@@ -29,10 +29,26 @@ function App() {
     .update({
       titulo,
       autor
+    }).then(() =>{
+        setIdPost('')
+        setTitulo('')
+        setAutor('')
     })
     
   }
-  
+ 
+  async function deletePost(){
+    await firebase.firestore().collection('posts').doc(idPost).delete().then(()=>{
+      setIdPost('')
+      console.log("DEleado com sucesso.")
+    })
+  }
+ 
+    async function deletePostById(id){
+    await firebase.firestore().collection('posts').doc(id).delete().then(()=>{
+      console.log("Deletado com sucesso. ID:" + id) 
+    })
+  }
  
   
   useEffect(() => {
@@ -61,11 +77,12 @@ function App() {
      <input type="text" placeholder="Digite o Id" value={idPost} onChange={(e) => setIdPost(e.target.value)}/>
      
       <label htmlFor="">Titulo1</label>
-        <textarea cols="10" rows="3" value={titulo} onChange= {(e) => setTitulo(e.target.value)}></textarea>
+        <textarea placeholder="Digite o titulo" cols="10" rows="3" value={titulo} onChange= {(e) => setTitulo(e.target.value)}></textarea>
         <label htmlFor="">Autor</label>
         <input type="text" placeholder='Digite o nome do Autor' value={autor} onChange={ (e) => setAutor(e.target.value) } />
-        <button onClick={handleAdd}>Cadastrar</button>
-        <button onClick={editPost}>Editar</button>
+        <button onClick={ () => handleAdd()}>Cadastrar</button>
+        <button onClick={ () => editPost()}>Editar</button>
+        <button onClick={ () => deletePost()}>Excluir</button>
      </div>
      
      <div className="list-container">
@@ -74,7 +91,7 @@ function App() {
           posts.map((post) =>{
             return(
                 <li key={post.id}>
-                  <span>  {post.id } -- </span> <br />
+                  <span>  {post.id } --  </span><button onClick={() => deletePostById(post.id) }> Excluir</button> <br />
                   <span>  {post.titulo } -- </span> <br />
                   <span>  {post.autor }</span> <br />
                 </li>
