@@ -81,7 +81,11 @@ function App() {
       setSenha('')
     })
     .catch((error)=>{
-      console.log("Error :" + error)
+      if(error.code === 'auth/weak-password'){
+        alert('Senha Fraca')
+      }else if(error.code==='auth/email-already-in-use'){
+        alert('Esse email ja existe')
+      }
     })
   }
   
