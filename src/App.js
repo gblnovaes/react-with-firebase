@@ -12,8 +12,10 @@ function App() {
   const [email,setEmail] = useState('')
   const [senha,setSenha] = useState('')
   
+  const [user,setUser] = useState(false)
+  const [userDetails,setUserDetails] = useState({})
+  
   async function handleAdd(){
-    console.log("clicou")
       await firebase.firestore().collection('posts')
       .add({
         titulo: titulo,
@@ -43,7 +45,7 @@ function App() {
   async function deletePost(){
     await firebase.firestore().collection('posts').doc(idPost).delete().then(()=>{
       setIdPost('')
-      console.log("DEleado com sucesso.")
+      console.log("Deletado com sucesso.")
     })
   }
  
@@ -89,11 +91,53 @@ function App() {
     })
   }
   
+  async function logarUsuario(){
+     
+    await firebase.auth().signInWithEmailAndPassword(email,senha)
+    .then((response) =>{
+      console.log(response.user)
+      setUserDetails({
+        uid: response.user.uid,
+        email: response.user.email
+      })
+      setEmail('')
+      setSenha('')
+      setUser(true)
+    })
+    .catch((error)=>{
+      console.log(error)
+    })
+  }
+  
+  async function deslogarUser(){
+    await firebase.auth().signOut()
+    .then((response) =>{
+      setUser(false)
+      setUserDetails({})
+      console.log("Deslogado " + response)
+    })
+    .catch((error) => {
+      
+    })
+  }
+  
   return (
     
     <>
     
-    <div className='container'>
+    <div className='container'>   
+    {
+      user && (
+        <div>
+        <h1>Usuario logado:</h1> <br />
+        <strong>{userDetails.uid} -</strong>
+        <strong>{userDetails.email}</strong>
+        <button onClick={() => deslogarUser()}>Deslogar Usuario</button>
+
+        </div>
+      )
+    }
+    <br />
     <h2>Cadastro de Novo Usuario</h2>
           <label htmlFor="">Email</label>
           <input type="text" placeholder="Digite o Email" value={email} onChange={(e) => setEmail(e.target.value)} /> <br />
@@ -117,6 +161,7 @@ function App() {
           <button onClick={() => handleAdd()}>Cadastrar</button>
           <button onClick={() => editPost()}>Editar</button>
           <button onClick={() => deletePost()}>Excluir</button>
+          <button onClick={() => logarUsuario()}>Logar Usuario</button>
         </div>
 
         <div className="list-container">

@@ -69,3 +69,8 @@ body {
 .container .list-container ul li span {
     color: #f1f1f1;
 }
+
+h1,
+strong {
+    color: white;
+}
