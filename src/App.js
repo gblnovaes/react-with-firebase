@@ -21,11 +21,11 @@ function App() {
         titulo: titulo,
         autor: autor
       }).then(() => {
-        console.log("Dados Cadastrado.")
+        // console.log("Dados Cadastrado.")
         setTitulo('')
         setAutor('')
       }).catch((error) =>{
-        console.log("De ruim : " + error)
+        // console.log("De ruim : " + error)
       })
   }
   
@@ -45,17 +45,16 @@ function App() {
   async function deletePost(){
     await firebase.firestore().collection('posts').doc(idPost).delete().then(()=>{
       setIdPost('')
-      console.log("Deletado com sucesso.")
+      // console.log("Deletado com sucesso.")
     })
   }
  
-    async function deletePostById(id){
+  async function deletePostById(id){
     await firebase.firestore().collection('posts').doc(id).delete().then(()=>{
-      console.log("Deletado com sucesso. ID:" + id) 
+      // console.log("Deletado com sucesso. ID:" + id) 
     })
   }
- 
-  
+
   useEffect(() => {
     async function loadPosts() {
       await firebase.firestore().collection('posts').onSnapshot((doc) => {
@@ -78,7 +77,7 @@ function App() {
   async function novoUsuario(){
     await firebase.auth().createUserWithEmailAndPassword(email,senha)
     .then(()=>{
-      console.log("Cadastrado com sucesso")
+      // console.log("Cadastrado com sucesso")
       setEmail('')
       setSenha('')
     })
@@ -95,7 +94,7 @@ function App() {
      
     await firebase.auth().signInWithEmailAndPassword(email,senha)
     .then((response) =>{
-      console.log(response.user)
+      // console.log(response.user)
       setUserDetails({
         uid: response.user.uid,
         email: response.user.email
@@ -105,7 +104,7 @@ function App() {
       setUser(true)
     })
     .catch((error)=>{
-      console.log(error)
+      // console.log(error)
     })
   }
   
@@ -120,6 +119,30 @@ function App() {
       
     })
   }
+  
+  useEffect(() => {
+      async function checkLogin() {
+        await firebase.auth().onAuthStateChanged(user =>{
+          if(user){
+            console.log(user)
+            
+          
+            setUser(true)
+            setUserDetails({
+              uid: user.uid,
+              email: user/email
+            })
+            
+          }else{
+            // nem user logado
+            setUser(false)
+            setUserDetails({})
+          }
+        })
+      }
+      
+      checkLogin()
+  },[])
   
   return (
     
